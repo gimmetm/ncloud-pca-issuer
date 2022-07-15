@@ -32,13 +32,13 @@ type NcloudPCAIssuerSpec struct {
 	// CaTag is the id of the CA to issue certificates from
 	CaTag string `json:"caTag,omitempty"`
 
-	// KeyType is the type of the CA key
+	// KeyType is the Algorithm type of the CA Public key
 	KeyType string `json:"keyType,omitempty"`
 
-	// KeyBits is the size of the CA key
+	// KeyBits is the bit length of the CA Public key
 	KeyBits string `json:"keyBits,omitempty"`
 
-	// CaTag is the id of the CA to issue certificates from
+	// NcloudApiGw is the URL for NCLOUD API Gateway
 	NcloudApiGw string `json:"ncloudApiGw,omitempty"`
 
 	// Needs to be specified if you want to authorize with AWS using an access and secret key

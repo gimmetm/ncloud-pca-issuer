@@ -40,13 +40,13 @@ spec:
                 description: CaTag is the id of the CA to issue certificates from
                 type: string
               keyBits:
-                description: KeyBits is the size of the CA key
+                description: KeyBits is the bit length of the CA Public key
                 type: string
               keyType:
-                description: KeyType is the type of the CA key
+                description: KeyType is the Algorithm type of the CA Public key
                 type: string
               ncloudApiGw:
-                description: CaTag is the id of the CA to issue certificates from
+                description: NcloudApiGw is the URL for NCLOUD API Gateway
                 type: string
               secretRef:
                 description: Needs to be specified if you want to authorize with AWS
