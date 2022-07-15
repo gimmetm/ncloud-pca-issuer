@@ -63,7 +63,7 @@ func (p *pcaSigner) Sign(csr []byte, expiry time.Duration) (cert []byte, ca []by
 		return nil, nil, err
 	}
 	period := fmt.Sprintf("%d", int(expiry.Hours()/24))
-	csrPem := string(csr)
+	csrPem := strings.TrimSpace(string(csr))
 	csrReq := &privateca.SignCsr{
 		CsrPem:  &csrPem,
 		Period:  &period,
