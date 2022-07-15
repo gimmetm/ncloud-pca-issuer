@@ -18,6 +18,10 @@ package pca
 import (
 	"bytes"
 	"context"
+	"crypto/ecdsa"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"errors"
 	"fmt"
 	"github.com/NaverCloudPlatform/ncloud-pca-issuer/pkg/api/v1alpha1"
@@ -27,6 +31,7 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -60,8 +65,10 @@ func (p *pcaSigner) Sign(csr []byte, expiry time.Duration) (cert []byte, ca []by
 	period := fmt.Sprintf("%d", int(expiry.Hours()/24))
 	csrPem := string(csr)
 	csrReq := &privateca.SignCsr{
-		CsrPem: &csrPem,
-		Period: &period,
+		CsrPem:  &csrPem,
+		Period:  &period,
+		KeyType: &p.spec.KeyType,
+		KeyBits: &p.spec.KeyBits,
 	}
 	csrResp, err := pcaClient.V1Api.CaCaTagCertSignPost(context.Background(), csrReq, &p.spec.CaTag, nil)
 	if err != nil {
@@ -82,9 +89,32 @@ func NewSigner(ctx context.Context, spec *v1alpha1.NcloudPCAIssuerSpec, namespac
 	if err != nil {
 		return p, err
 	}
-	_, err = pcaClient.V1Api.CaCaTagGet(ctx, &spec.CaTag)
+	ca, err := pcaClient.V1Api.CaCaTagGet(ctx, &spec.CaTag)
+	if err != nil {
+
+	}
+
+	pemBytes := []byte(ncloud.StringValue(ca.Data.CaCertInfo.CertPem))
+	block, _ := pem.Decode(pemBytes)
+	cert, err := x509.ParseCertificate(block.Bytes)
 	if err != nil {
 		return nil, err
+	}
+
+	var keyType, keyBits string
+	switch pub := cert.PublicKey.(type) {
+	case *rsa.PublicKey:
+		keyType = "RSA"
+		keyBits = strconv.Itoa(pub.N.BitLen())
+	case *ecdsa.PublicKey:
+		keyType = "ECDSA"
+		keyBits = strconv.Itoa(pub.Params().N.BitLen())
+	default:
+		panic("unknown type of public key")
+	}
+
+	if spec.KeyType != keyType || spec.KeyBits != keyBits {
+		return nil, fmt.Errorf("KeyType, KeyBits are not match from CA Cert[%s,%s]", keyType, keyBits)
 	}
 
 	return p, nil

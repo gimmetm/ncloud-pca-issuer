@@ -32,6 +32,12 @@ type NcloudPCAIssuerSpec struct {
 	// CaTag is the id of the CA to issue certificates from
 	CaTag string `json:"caTag,omitempty"`
 
+	// KeyType is the type of the CA key
+	KeyType string `json:"keyType,omitempty"`
+
+	// KeyBits is the size of the CA key
+	KeyBits string `json:"keyBits,omitempty"`
+
 	// CaTag is the id of the CA to issue certificates from
 	NcloudApiGw string `json:"ncloudApiGw,omitempty"`
 

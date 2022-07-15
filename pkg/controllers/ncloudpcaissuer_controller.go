@@ -47,8 +47,9 @@ type NcloudPCAIssuerReconciler struct {
 
 	Log logr.Logger
 	client.Client
-	Scheme   *runtime.Scheme
-	Recorder record.EventRecorder
+	Scheme                   *runtime.Scheme
+	Recorder                 record.EventRecorder
+	ClusterResourceNamespace string
 }
 
 // +kubebuilder:rbac:groups=privateca-issuer.ncloud.com,resources=ncloudpcaissuers;ncloudpcaclusterissuers,verbs=get;list;watch;create;update;patch;delete

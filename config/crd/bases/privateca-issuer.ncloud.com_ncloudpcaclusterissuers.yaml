@@ -39,6 +39,12 @@ spec:
               caTag:
                 description: CaTag is the id of the CA to issue certificates from
                 type: string
+              keyBits:
+                description: KeyBits is the size of the CA key
+                type: string
+              keyType:
+                description: KeyType is the type of the CA key
+                type: string
               ncloudApiGw:
                 description: CaTag is the id of the CA to issue certificates from
                 type: string

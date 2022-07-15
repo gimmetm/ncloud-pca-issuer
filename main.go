@@ -117,23 +117,24 @@ func main() {
 	}
 
 	if err = (&controllers.NcloudPCAIssuerReconciler{
-		Kind:     "NcloudPCAIssuer",
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Recorder: mgr.GetEventRecorderFor("ncloud-pca-issuer-issuer-controller"),
-		Log:      ctrl.Log.WithName("controllers").WithName("NcloudPCAIssuer"),
+		Kind:                     "NcloudPCAIssuer",
+		Client:                   mgr.GetClient(),
+		Scheme:                   mgr.GetScheme(),
+		Recorder:                 mgr.GetEventRecorderFor("ncloud-pca-issuer-issuer-controller"),
+		Log:                      ctrl.Log.WithName("controllers").WithName("NcloudPCAIssuer"),
+		ClusterResourceNamespace: clusterResourceNamespace,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "NcloudPCAIssuer")
 		os.Exit(1)
 	}
 
 	if err = (&controllers.NcloudPCAIssuerReconciler{
-		Kind:     "NcloudPCAClusterIssuer",
-		Client:   mgr.GetClient(),
-		Scheme:   mgr.GetScheme(),
-		Recorder: mgr.GetEventRecorderFor("ncloud-pca-issuer-clusterissuer-controller"),
-		Log:      ctrl.Log.WithName("controllers").WithName("NcloudPCAClusterIssuer"),
-		//ClusterResourceNamespace: clusterResourceNamespace,
+		Kind:                     "NcloudPCAClusterIssuer",
+		Client:                   mgr.GetClient(),
+		Scheme:                   mgr.GetScheme(),
+		Recorder:                 mgr.GetEventRecorderFor("ncloud-pca-issuer-clusterissuer-controller"),
+		Log:                      ctrl.Log.WithName("controllers").WithName("NcloudPCAClusterIssuer"),
+		ClusterResourceNamespace: clusterResourceNamespace,
 		//HealthCheckerBuilder:     signer.ExampleHealthCheckerFromIssuerAndSecretData,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "NcloudPCAClusterIssuer")
