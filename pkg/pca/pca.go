@@ -70,10 +70,7 @@ func (p *pcaSigner) Sign(csr []byte, expiry time.Duration) (cert []byte, ca []by
 		KeyType: &p.spec.KeyType,
 		KeyBits: &p.spec.KeyBits,
 	}
-	fmt.Printf("%v\n", *csrReq.CsrPem)
-	fmt.Printf("%v\n", *csrReq.Period)
-	fmt.Printf("%v\n", *csrReq.KeyType)
-	fmt.Printf("%v\n", *csrReq.KeyBits)
+
 	csrResp, err := pcaClient.V1Api.CaCaTagCertSignPost(context.Background(), csrReq, &p.spec.CaTag, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -117,6 +114,12 @@ func NewSigner(ctx context.Context, spec *v1alpha1.NcloudPCAIssuerSpec, namespac
 		panic("unknown type of public key")
 	}
 
+	if p.spec.KeyType == "" {
+		p.spec.KeyType = keyType
+	}
+	if p.spec.KeyBits == "" {
+		p.spec.KeyBits = keyBits
+	}
 	if spec.KeyType != keyType || spec.KeyBits != keyBits {
 		return nil, fmt.Errorf("KeyType, KeyBits are not match from CA Cert[%s,%s]", keyType, keyBits)
 	}
